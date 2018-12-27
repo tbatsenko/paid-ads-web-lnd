@@ -1,0 +1,61 @@
+<div>
+
+	<div class="table-responsive">
+		<table class="table table-striped" st-table="st_peers" st-safe-src="peers" ng-if="numberOfPeers > 0">
+			<thead>
+				<tr>
+					<th class="abc-checkbox"><div class="abc-checkbox"><input type="checkbox" ng-model="form.checkbox" ng-change="selectAll(st_peers)" class="form-check-input" id="peers_checkall_{{ $id }}" /><label class="form-check-label" for="peers_checkall_{{ $id }}"></label></div></th>
+					<th st-sort="pub_key" st-sort-default="true">Pubkey</th>
+					<th st-sort="address">Address</th>
+					<th st-sort="alias">Alias</th>
+					<th st-sort="sat_sent">Sat<br/>sent</th>
+					<th st-sort="sat_recv">Sat<br/>recv</th>
+					<th st-sort="bytes_sent">Bytes<br/>sent</th>
+					<th st-sort="bytes_recv">Bytes<br/>recv</th>
+					<th st-sort="ping_time">Ping<br/>time</th>
+					<th></th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-repeat="peer in st_peers">
+					<td><div class="abc-checkbox"><input type="checkbox" ng-model="peer.selected" class="form-check-input" id="peers_check_{{ $id }}" /><label class="form-check-label" for="peers_check_{{ $id }}"></div></td>
+					<td><span title="{{ peer.pub_key }}">{{ peer.pub_key | firstlast:6 }}</span> <button type="button" class="btn btn-default btn-xs" title="Copy to clipboard" aria-label="Copy to clipboard" ngclipboard data-clipboard-text="{{ peer.pub_key }}" ngclipboard-success="pubkeyCopied(peer);" uib-tooltip="Copied!" tooltip-placement="bottom" tooltip-trigger="'none'" tooltip-is-open="peer.pubkeyCopied"><span class="glyphicon glyphicon-copy" aria-hidden="true"></span></button>
+						<button type="button" class="btn btn-default btn-xs" title="Show node {{ peer.pub_key }} info" aria-label="Show node {{ peer.pub_key }} info" ng-click="showNodeInfo(peer)"><span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span></button></td>
+					<td>{{ peer.address }} <button type="button" class="btn btn-default btn-xs" title="Copy to clipboard" aria-label="Copy to clipboard" ngclipboard data-clipboard-text="{{ peer.address }}" ngclipboard-success="addressCopied(peer);" uib-tooltip="Copied!" tooltip-placement="bottom" tooltip-trigger="'none'" tooltip-is-open="peer.addressCopied"><span class="glyphicon glyphicon-copy" aria-hidden="true"></span></button></td>
+					<td><span style="color:{{ peer.color }};" ng-show="peer.color">{{ peer.custom_alias }}</span><span ng-hide="peer.color">{{ peer.custom_alias }}</span></td>
+					<td>{{ peer.sat_sent }}</td>
+					<td>{{ peer.sat_recv }}</td>
+					<td>{{ peer.bytes_sent }}</td>
+					<td>{{ peer.bytes_recv }}</td>
+					<td>{{ peer.ping_time }}</td>
+					<td>
+						<div class="btn-toolbar pull-right">
+							<button type="button" class="btn btn-default btn-xs" title="Show node URI QR Code" aria-label="Show node URI QR Code" ng-click="showQRCode(peer.pub_key + '@' + peer.address)"><span class="glyphicon glyphicon-qrcode" aria-hidden="true"></span></button>
+							<button type="button" class="btn btn-default btn-xs" title="Disconnect" aria-label="Disconnect" ng-click="disconnect(peer)"><span class="glyphicon glyphicon-eye-close" aria-hidden="true"></span></button>
+						</div>
+					</td>
+				</tr>
+			</tbody>
+			<tfoot ng-if="numberOfPeers > 10">
+				<tr>
+					<td colspan="5" class="text-left">
+						<div st-pagination="" st-items-by-page="cfg.itemsPerPage" st-displayed-pages="10"></div>
+					</td>
+					<td colspan="5" class="text-right">
+						<span>Items per page&nbsp; </span>
+						<select class="form-control itemsperpage" placeholder="Items per page" ng-model="cfg.itemsPerPage" ng-options="ps for ps in pageSizes" ng-change="pageSizeChanged()"></select>
+					</td>
+				</tr>
+			</tfoot>
+		</table>
+	</div>
+
+	<div ng-if="numberOfPeers == 0">
+		<span>No connected peers</span>
+	</div>
+
+	<div id="listpeers-data" class="collapse">
+		<pre>{{ data }}</pre>
+	</div>
+
+</div>

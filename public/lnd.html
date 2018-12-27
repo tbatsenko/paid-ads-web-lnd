@@ -1,0 +1,309 @@
+<!-- index.html -->
+<!doctype html>
+<html ng-app="lnwebcli">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1"><!-- Optimize mobile viewport -->
+
+	<title>Lnd Web Client</title>
+
+	<script src="./dist/lnd-bundle.js"></script>
+</head>
+
+<body>
+	<toast></toast>
+	<!-- Fixed navbar -->
+	<nav class="navbar navbar-default navbar-fixed-top" ng-controller="NavBarCtrl">
+	  <div class="container">
+		<div class="navbar-header">
+		  <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+			<span class="sr-only">Toggle navigation</span>
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+		  </button>
+		  <a class="navbar-brand" href="#">Lnd Web Client</a>
+		</div>
+		<div id="navbar" class="navbar-collapse collapse" data-toggle="collapse" data-target=".navbar-collapse.in">
+		  <ul class="nav navbar-nav">
+			  <li><a href="#infos">Information</a></li>
+			  <li><a href="#balances">Balances</a></li>
+			  <li><a href="#peers">Peers</a></li>
+			  <li><a href="#channels">Channels</a></li>
+			  <li><a href="#payments">Payments</a></li>
+			  <li><a href="#logs">Logs</a></li>
+			  <li class="dropdown">
+				<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Tools <span class="caret"></span></a>
+				<ul class="dropdown-menu">
+					<li><a ng-click="newAddress()">New Address</a></li>
+					<li><a ng-click="sendCoins()">Send Coins</a></li>
+					<li><a ng-click="queryRoute()">Query Routes</a></li>
+					<li><a ng-click="sendToRoute()">Send to route</a></li>
+					<li role="separator" class="divider"></li>
+					<li><a ng-click="signMessage()">Sign message</a></li>
+					<li><a ng-click="verifyMessage()">Verify message</a></li>
+					<li role="separator" class="divider"></li>
+					<li><a ng-click="renderGraph()">Network graph</a></li>
+					<li><a ng-click="getNodeInfo()">Get node info</a></li>
+					<li role="separator" class="divider"></li>
+					<li><a ng-click="editSettings()">Settings</a></li>
+				</ul>
+			  </li>
+		  </ul>
+		  <ul class="nav navbar-nav navbar-right">
+		  </ul>
+		</div>
+	  </div>
+	</nav>
+
+<div class="container">
+	<div class="page-header">
+		<a name="infos"></a>
+		<h1>Node and Network Information</h1>
+	</div>
+	<div class="row">
+		<div class="col-sm-6">
+		  <div class="panel panel-default" ng-controller="GetInfoCtrl">
+			<div class="panel-heading clearfix">
+			  <span class="panel-title">Node Info <i class="fa fa-spinner fa-spin" ng-show="spinner > 0"></i></span>
+				<div class="btn-toolbar pull-right">
+					<button type="button" class="btn btn-default btn-sm" title="Refresh" aria-label="Refresh" ng-click="refresh()"><span class="glyphicon glyphicon-refresh" aria-hidden="true"></span></button>
+					<button type="button" class="btn btn-default btn-sm" title="Show JSON" aria-label="Show JSON data" data-toggle="collapse" data-target="#getinfo-data"><span class="glyphicon glyphicon-asterisk" aria-hidden="true"></span></button>
+				</div>
+			</div>
+			<div class="panel-body">
+			  <get-info info="info" />
+			</div>
+		  </div>
+		</div><!-- /.col-sm-6 -->
+		<div class="col-sm-6">
+		  <div class="panel panel-default" ng-controller="GetNetworkInfoCtrl">
+			<div class="panel-heading clearfix">
+			  <span class="panel-title">Network Info <i class="fa fa-spinner fa-spin" ng-show="spinner > 0"></i></span>
+				<div class="btn-toolbar pull-right">
+					<button type="button" class="btn btn-default btn-sm" title="Refresh" aria-label="Refresh" ng-click="refresh()"><span class="glyphicon glyphicon-refresh" aria-hidden="true"></span></button>
+					<button type="button" class="btn btn-default btn-sm" title="Show JSON" aria-label="Show JSON data" data-toggle="collapse" data-target="#getnetworkinfo-data"><span class="glyphicon glyphicon-asterisk" aria-hidden="true"></span></button>
+				</div>
+			</div>
+			<div class="panel-body">
+			  <get-network-info info="info" />
+			</div>
+		  </div>
+		</div><!-- /.col-sm-6 -->
+	</div>
+
+	<div class="page-header">
+		<a name="balances"></a>
+		<h1>Wallet and Channel Balances</h1>
+	</div>
+	<div class="row">
+		<div class="col-sm-6">
+		  <div class="panel panel-default" ng-controller="WalletBalanceCtrl">
+			<div class="panel-heading clearfix">
+			  <span class="panel-title">Wallet Balance <i class="fa fa-spinner fa-spin" ng-show="spinner > 0"></i></span>
+				<div class="btn-toolbar pull-right">
+					<button type="button" class="btn btn-default btn-sm" title="New address" aria-label="New address" ng-click="newAddress()"><span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span></button>
+					<button type="button" class="btn btn-default btn-sm" title="Send coins" aria-label="Send coins" ng-click="sendCoins()"><span class="glyphicon glyphicon-minus-sign" aria-hidden="true"></span></button>
+					<button type="button" class="btn btn-default btn-sm" title="Refresh" aria-label="Refresh" ng-click="refresh()"><span class="glyphicon glyphicon-refresh" aria-hidden="true"></span></button>
+					<button type="button" class="btn btn-default btn-sm" title="Show JSON" aria-label="Show JSON data" data-toggle="collapse" data-target="#walletbalance-data"><span class="glyphicon glyphicon-asterisk" aria-hidden="true"></span></button>
+				</div>
+			</div>
+			<div class="panel-body">
+			  <wallet-balance balance="balance" />
+			</div>
+		  </div>
+		</div><!-- /.col-sm-6 -->
+		<div class="col-sm-6">
+		  <div class="panel panel-default" ng-controller="ChannelBalanceCtrl">
+			<div class="panel-heading clearfix">
+			  <span class="panel-title">Channel Balance <i class="fa fa-spinner fa-spin" ng-show="spinner > 0"></i></span>
+				<div class="btn-toolbar pull-right">
+					<button type="button" class="btn btn-default btn-sm" title="Refresh" aria-label="Refresh" ng-click="refresh()"><span class="glyphicon glyphicon-refresh" aria-hidden="true"></span></button>
+					<button type="button" class="btn btn-default btn-sm" title="Show JSON" aria-label="Show JSON data" data-toggle="collapse" data-target="#channelbalance-data"><span class="glyphicon glyphicon-asterisk" aria-hidden="true"></span></button>
+				</div>
+			</div>
+			<div class="panel-body">
+			  <channel-balance balance="balance" />
+			</div>
+		  </div>
+		</div><!-- /.col-sm-6 -->
+	</div>
+
+	<div class="page-header">
+		<a name="peers"></a>
+		<h1>Peers</h1>
+	</div>
+	<div class="row">
+		<div class="col-sm-12">
+		  <div class="panel panel-success" ng-controller="ListPeersCtrl">
+			<div class="panel-heading clearfix">
+			  <span class="panel-title"><toggle-panel visible="cfg.listVisible" aria-label="Toggle peers list" on-toggle="toggle()"></toggle-panel>
+			  Connected Peers <i class="fa fa-spinner fa-spin" ng-show="spinner > 0"></i></span>
+			  <div class="btn-toolbar pull-right" ng-show="cfg.listVisible">
+				<button type="button" class="btn btn-default btn-sm" title="Connect to a new peer" aria-label="Connect to a new peer" ng-click="add()"><span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span></button>
+				<button type="button" class="btn btn-default btn-sm" title="Disconnect from selected peers" aria-label="Disconnect from selected peers" ng-click="disconnectBatch()"><span class="glyphicon glyphicon-eye-close" aria-hidden="true"></span></button>
+				<button type="button" class="btn btn-default btn-sm" title="Refresh" aria-label="Refresh" ng-click="refresh()"><span class="glyphicon glyphicon-refresh" aria-hidden="true"></span></button>
+				<button type="button" class="btn btn-default btn-sm" title="Show JSON" aria-label="Show JSON data" data-toggle="collapse" data-target="#listpeers-data"><span class="glyphicon glyphicon-asterisk" aria-hidden="true"></span></button>
+			  </div>
+			</div>
+			<div class="panel-body ng-hide" ng-show="cfg.listVisible">
+			  <list-peers peers="peers" />
+			</div>
+		  </div>
+		</div><!-- /.col-sm-6 -->
+	</div>
+	<div class="row">
+		<div class="col-sm-12">
+		  <div class="panel panel-default" ng-controller="ListKnownPeersCtrl">
+			<div class="panel-heading clearfix">
+			  <span class="panel-title"><toggle-panel visible="cfg.listVisible" aria-label="Toggle known peers list" on-toggle="toggle()"></toggle-panel>
+			  Known Peers <i class="fa fa-spinner fa-spin" ng-show="spinner > 0"></i></span>
+			  <div class="btn-toolbar pull-right" ng-show="cfg.listVisible">
+				<button type="button" class="btn btn-default btn-sm" title="Connect to selected peers" aria-label="Connect to selected peers" ng-click="connectBatch()"><span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span></button>
+				<button type="button" class="btn btn-default btn-sm" title="Remove selected peers" aria-label="Remove selected peers" ng-click="removeBatch()"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>
+				<button type="button" class="btn btn-default btn-sm" title="Import peers" aria-label="Import peers" ng-click="import()"><span class="glyphicon glyphicon-save" aria-hidden="true"></span></button>
+				<button type="button" class="btn btn-default btn-sm" title="Refresh" aria-label="Refresh" ng-click="refresh()"><span class="glyphicon glyphicon-refresh" aria-hidden="true"></span></button>
+				<button type="button" class="btn btn-default btn-sm" title="Show JSON" aria-label="Show JSON data" data-toggle="collapse" data-target="#listknownpeers-data"><span class="glyphicon glyphicon-asterisk" aria-hidden="true"></span></button>
+			  </div>
+			</div>
+			<div class="panel-body ng-hide" ng-show="cfg.listVisible">
+			  <list-known-peers peers="peers" />
+			</div>
+		  </div>
+		</div><!-- /.col-sm-6 -->
+	</div>
+	<div class="page-header">
+		<a name="channels"></a>
+		<h1>Channels</h1>
+	</div>
+	<div class="row">
+		<div class="col-sm-12">
+		  <div class="panel panel-success" ng-controller="ListChannelsCtrl">
+			<div class="panel-heading clearfix">
+			  <span class="panel-title"><toggle-panel visible="cfg.listVisible" aria-label="Toggle active channels list" on-toggle="toggle()"></toggle-panel>
+			  Opened Channels <i class="fa fa-spinner fa-spin" ng-show="spinner > 0"></i></span>
+			  <div class="btn-toolbar pull-right" ng-show="cfg.listVisible">
+				<button type="button" class="btn btn-default btn-sm" title="Open channel" aria-label="Open channel" ng-click="add()"><span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span></button>
+				<button type="button" class="btn btn-default btn-sm" title="Close selected channels" aria-label="Close selected channels" ng-click="closeBatch()"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>
+				<button type="button" class="btn btn-default btn-sm" title="Refresh" aria-label="Refresh" ng-click="refresh()"><span class="glyphicon glyphicon-refresh" aria-hidden="true"></span></button>
+				<button type="button" class="btn btn-default btn-sm" title="Show JSON" aria-label="Show JSON data" data-toggle="collapse" data-target="#listchannels-data"><span class="glyphicon glyphicon-asterisk" aria-hidden="true"></span></button>
+			  </div>
+			</div>
+			<div class="panel-body ng-hide" ng-show="cfg.listVisible">
+			  <list-channels channels="channels" />
+			</div>
+		  </div>
+		</div><!-- /.col-sm-12 -->
+	</div>
+	<div class="row">
+		<div class="col-sm-12">
+		  <div class="panel panel-warning" ng-controller="PendingChannelsCtrl">
+			<div class="panel-heading clearfix">
+			  <span class="panel-title"><toggle-panel visible="cfg.listVisible" aria-label="Toggle pending channels list" on-toggle="toggle()"></toggle-panel>
+			  Pending Channels <i class="fa fa-spinner fa-spin" ng-show="spinner > 0"></i></span>
+				<div class="btn-toolbar pull-right" ng-show="cfg.listVisible">
+					<button type="button" class="btn btn-default btn-sm" title="Refresh" aria-label="Refresh" ng-click="refresh()"><span class="glyphicon glyphicon-refresh" aria-hidden="true"></span></button>
+					<button type="button" class="btn btn-default btn-sm" title="Show JSON" aria-label="Show JSON data" data-toggle="collapse" data-target="#pendingchannels-data"><span class="glyphicon glyphicon-asterisk" aria-hidden="true"></span></button>
+				</div>
+			</div>
+			<div class="panel-body ng-hide" ng-show="cfg.listVisible">
+			  <pending-channels channels="channels" />
+			</div>
+		  </div>
+		</div><!-- /.col-sm-12 -->
+	</div>
+	<div class="page-header">
+		<a name="payments"></a>
+		<h1>Payments / Invoices</h1>
+	</div>
+	<div class="row">
+		<div class="col-sm-12">
+		  <div class="panel panel-success" ng-controller="ListPaymentsCtrl">
+			<div class="panel-heading clearfix">
+			  <span class="panel-title"><toggle-panel visible="cfg.listVisible" aria-label="Toggle payments list" on-toggle="toggle()"></toggle-panel>
+			  Payments <i class="fa fa-spinner fa-spin" ng-show="spinner > 0"></i></span>
+			  <div class="btn-toolbar pull-right" ng-show="cfg.listVisible">
+				<button type="button" class="btn btn-default btn-sm" title="Send payment" aria-label="Send payment" title="Send payment" ng-click="add()"><span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span></button>
+				<button type="button" class="btn btn-default btn-sm" title="Refresh" aria-label="Refresh" ng-click="refresh()"><span class="glyphicon glyphicon-refresh" aria-hidden="true"></span></button>
+				<button type="button" class="btn btn-default btn-sm" title="Show JSON" aria-label="Show JSON data" data-toggle="collapse" data-target="#listpayments-data"><span class="glyphicon glyphicon-asterisk" aria-hidden="true"></span></button>
+			  </div>
+			</div>
+			<div class="panel-body ng-hide" ng-show="cfg.listVisible">
+			  <list-payments payments="payments" />
+			</div>
+		  </div>
+		</div><!-- /.col-sm-12 -->
+	</div>
+	<div class="row">
+		<div class="col-sm-12">
+		  <div class="panel panel-info" ng-controller="ListInvoicesCtrl">
+			<div class="panel-heading clearfix">
+			  <span class="panel-title"><toggle-panel visible="cfg.listVisible" aria-label="Toggle invoices list" on-toggle="toggle()"></toggle-panel>
+			  Invoices <i class="fa fa-spinner fa-spin" ng-show="spinner > 0"></i></span>
+			  	<div class="btn-toolbar pull-right" pull-right" ng-show="cfg.listVisible">
+					<button type="button" class="btn btn-default btn-sm" title="Add invoice" aria-label="Add invoice" title="Add invoice" ng-click="add()"><span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span></button>
+					<button type="button" class="btn btn-default btn-sm" title="Refresh" aria-label="Refresh" ng-click="refresh()"><span class="glyphicon glyphicon-refresh" aria-hidden="true"></span></button>
+					<button type="button" class="btn btn-default btn-sm" title="Show JSON" aria-label="Show JSON data" data-toggle="collapse" data-target="#listinvoices-data"><span class="glyphicon glyphicon-asterisk" aria-hidden="true"></span></button>
+				</div>
+			</div>
+			<div class="panel-body ng-hide" ng-show="cfg.listVisible">
+			  <list-invoices invoices="invoices" />
+			</div>
+		  </div>
+		</div><!-- /.col-sm-12 -->
+	</div>
+	<div class="row">
+		<div class="col-sm-12">
+		  <div class="panel panel-success" ng-controller="ForwardingHistoryCtrl">
+			<div class="panel-heading clearfix">
+			  <span class="panel-title"><toggle-panel visible="cfg.listVisible" aria-label="Toggle forwarding history" on-toggle="toggle()"></toggle-panel>
+			  Forwarding history <i class="fa fa-spinner fa-spin" ng-show="spinner > 0"></i></span>
+			  <div class="btn-toolbar pull-right" ng-show="cfg.listVisible">
+				<button type="button" class="btn btn-default btn-sm" title="Refresh" aria-label="Refresh" ng-click="refresh()"><span class="glyphicon glyphicon-refresh" aria-hidden="true"></span></button>
+				<button type="button" class="btn btn-default btn-sm" title="Show JSON" aria-label="Show JSON data" data-toggle="collapse" data-target="#forwardinghistory-data"><span class="glyphicon glyphicon-asterisk" aria-hidden="true"></span></button>
+			  </div>
+			</div>
+			<div class="panel-body ng-hide" ng-show="cfg.listVisible">
+			  <forwarding-history history="history" />
+			</div>
+		  </div>
+		</div><!-- /.col-sm-12 -->
+	</div>
+	<div class="page-header">
+		<a name="logs"></a>
+		<h1>Logs</h1>
+	</div>
+	<div class="row">
+		<div class="col-sm-12">
+		  <div class="panel panel-info">
+			<div class="panel-heading clearfix">
+			  <span class="panel-title">
+			  Notifications <i class="fa fa-spinner fa-spin" ng-show="spinner > 0"></i></span>
+			</div>
+			<div class="panel-body">
+			  <pre id="notifications"></pre>
+			</div>
+		  </div>
+		</div><!-- /.col-sm-12 -->
+	</div>
+	<div class="row">
+		<div class="col-sm-12">
+		  <div class="panel panel-success" id="logpanel">
+			<div class="panel-heading clearfix">
+			  <span class="panel-title">
+			  lnd Log File <i class="fa fa-spinner fa-spin" ng-show="spinner > 0"></i></span>
+			</div>
+			<div class="panel-body">
+			  <pre id="tail"></pre>
+			</div>
+		  </div>
+		</div><!-- /.col-sm-12 -->
+	</div>
+
+</div>
+
+<a href="https://github.com/mably/lncli-web" target="_blank"><img class="forkmeongithub" src="https://camo.githubusercontent.com/c6625ac1f3ee0a12250227cf83ce904423abf351/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f6c6566745f677261795f3664366436642e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_left_gray_6d6d6d.png"></a>
+
+</body>
+
+</html>

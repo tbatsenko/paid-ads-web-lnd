@@ -1,0 +1,105 @@
+@import url("../../node_modules/bootstrap/dist/css/bootstrap.css");
+@import url("../../node_modules/font-awesome/css/font-awesome.css");
+@import url("../../node_modules/ng-toast/dist/ngToast.css");
+@import url("../../node_modules/awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css");
+
+html { overflow-y: scroll; }
+body { padding-top: 50px; }
+td.pubkey, td.payreq {
+	overflow-wrap: break-word;
+	white-space: normal !important;
+}
+td.payreq {
+	max-width: 28em;
+}
+div.page-header {
+	position: relative;
+}
+div.page-header > a[name] {
+	position: absolute;
+	top: -70px;
+}
+@media screen and (max-width: 767px) {
+	td.pubkey, td.payreq {
+		max-width: 15em;
+	}
+}
+#tail, #notifications {
+	max-height: 30em;
+	overflow: scroll;
+}
+
+.st-sort-ascent:before {
+	content: '\25B2';
+}
+
+.st-sort-descent:before {
+	content: '\25BC';
+}
+
+ul.pagination, select.itemsperpage {
+	margin: 10px 0 0 0;
+}
+
+select.itemsperpage {
+	display: inline-block;
+	width: 5.2em;
+}
+
+.panel-body .table {
+	margin-bottom: 0;
+}
+
+.forkmeongithub {
+	position: fixed;
+	top: 0;
+	left: 0;
+	border: 0;
+	z-index: 10000;
+}
+
+@media screen and (max-width: 767px) {
+	.forkmeongithub {
+		display: none;
+	}
+}
+
+div.form-group.abc-checkbox label {
+    margin-left: -8px;
+    padding-top: 3px;
+    padding-left: 10px;
+}
+
+th > div.abc-checkbox, td > div.abc-checkbox {
+	padding-left: 0px;
+}
+th > div.abc-checkbox label, td > div.abc-checkbox label {
+	padding-left: 0px;
+}
+td > div.abc-checkbox label {
+	top: -3px;
+}
+th.abc-checkbox {
+	width: 32px;
+}
+th.chan-active {
+	width: 1em;
+}
+th[st-sort] {
+	cursor: pointer;
+}
+span.panel-title {
+	line-height: 2em;
+}
+#editsettings-modal-body > form {
+	margin-top: 1em;
+}
+.amount {
+}
+.amount .amount-main {
+}
+.amount .amount-alt {
+	font-size: 75%;
+	font-style: italic;
+	line-height: 0.8em;
+}

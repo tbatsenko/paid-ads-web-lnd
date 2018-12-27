@@ -1,0 +1,75 @@
+<div>
+
+	<div class="alert alert-warning" role="alert" ng-show="warning">
+		<button type="button" class="close" ng-click="dismissWarning()" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+		{{ warning }}
+	</div>
+
+	<div class="table-responsive">
+		<table class="table table-striped" st-table="st_channels" st-safe-src="channels" ng-if="channels.length > 0">
+			<thead>
+				<tr>
+					<th class="abc-checkbox"><div class="abc-checkbox"><input type="checkbox" ng-model="form.checkbox" ng-change="selectAll(st_channels)" class="form-check-input" id="channels_checkall_{{ $id }}" /><label class="form-check-label" for="channels_checkall_{{ $id }}" title="Select all" /></div></th>
+					<th class="chan-active" st-sort="active"></th>
+					<th st-sort="chan_id">Channel Id / point</th>
+					<th st-sort="channelPeerAlias">Remote alias / pubkey</th>
+					<th st-sort="capacity">Capacity</th>
+					<th st-sort="local_balance">Local<br/>balance</th>
+					<th st-sort="remote_balance">Remote<br/>balance</th>
+					<th st-sort="total_satoshis_sent">Sat<br/>snt</th>
+					<th st-sort="total_satoshis_received">Sat<br/>rcv</th>
+					<th st-sort="num_updates">Nb.<br/>upd.</th>
+					<th st-sort="pending_htlcs.length">Pend.<br/>HTLC</th>
+					<th></th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-repeat="channel in st_channels">
+					<td><div class="abc-checkbox"><input type="checkbox" ng-model="channel.selected" class="form-check-input" id="channels_check_{{ $id }}" /><label class="form-check-label" for="channels_check_{{ $id }}" /></div></td>
+					<td><span ng-hide="channel.active" class="fa fa-circle" title="Inactive channel" aria-label="Inactive channel" style="color:red"/><span ng-show="channel.active" class="fa fa-circle" title="Active channel" aria-label="Active channel" style="color:lightgreen;"/></td>
+					<td>
+						<div>{{ channel.chan_id | firstlast:4 }}</div>
+						<div><span title="{{ channel.channel_point }}"><a ng-click="openChannelPointInExplorer(channel)" title="View transaction {{ channel.channel_point }} in explorer">{{ channel.channel_point | firstlast:4:6 }}</a></span> <button type="button" class="btn btn-default btn-xs" title="Copy to clipboard" aria-label="Copy to clipboard" ngclipboard data-clipboard-text="{{ channel.channel_point }}" ngclipboard-success="chanpointCopied(channel);" uib-tooltip="Copied!" tooltip-placement="bottom" tooltip-trigger="'none'" tooltip-is-open="channel.chanpointCopied"><span class="glyphicon glyphicon-copy" aria-hidden="true"></span></button>
+							<button type="button" class="btn btn-default btn-xs" title="View transaction {{ channel.channel_point }} in explorer" aria-label="View transaction {{ channel.channel_point }} in explorer" ng-click="openChannelPointInExplorer(channel)"><span class="glyphicon glyphicon-share" aria-hidden="true"></span></button></div>
+					</td>
+					<td>
+						<div>{{ channelPeerAlias(channel) }}</div>
+						<div><span title="{{ channel.remote_pubkey }}">{{ channel.remote_pubkey | firstlast:4 }}</span> <button type="button" class="btn btn-default btn-xs" title="Copy to clipboard" aria-label="Copy to clipboard" ngclipboard data-clipboard-text="{{ channel.remote_pubkey }}" ngclipboard-success="pubkeyCopied(channel);" uib-tooltip="Copied!" tooltip-placement="bottom" tooltip-trigger="'none'" tooltip-is-open="channel.pubkeyCopied"><span class="glyphicon glyphicon-copy" aria-hidden="true"></span></button></div>
+					</td>
+					<td><amount base-value="channel.capacity" /></td>
+					<td><amount base-value="channel.local_balance" /></td>
+					<td><amount base-value="channel.remote_balance" /></td>
+					<td>{{ channel.total_satoshis_sent }}</td>
+					<td>{{ channel.total_satoshis_received }}</td>
+					<td>{{ channel.num_updates }}</td>
+					<td>{{ channel.pending_htlcs.length }}</td>
+					<td>
+						<div class="btn-toolbar pull-right">
+							<button type="button" class="btn btn-default btn-xs" title="Close" aria-label="Close" ng-click="close(channel)"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>
+						</div>
+					</td>
+				</tr>
+			</tbody>
+			<tfoot ng-show="numberOfChannels > 10">
+				<tr>
+					<td colspan="7" class="text-left">
+						<div st-pagination="" st-items-by-page="cfg.itemsPerPage" st-displayed-pages="10"></div>
+					</td>
+					<td colspan="5" class="text-right">
+						<span>Items per page&nbsp; </span>
+						<select class="form-control itemsperpage" placeholder="Items per page" ng-model="cfg.itemsPerPage" ng-options="ps for ps in pageSizes" ng-change="pageSizeChanged()"></select>
+					</td>
+				</tr>
+			</tfoot>
+		</table>
+	</div>
+
+	<div ng-if="channels.length == 0">
+		<span>No available channels</span>
+	</div>
+
+	<div id="listchannels-data" class="collapse">
+		<pre>{{ data }}</pre>
+	</div>
+
+</div>

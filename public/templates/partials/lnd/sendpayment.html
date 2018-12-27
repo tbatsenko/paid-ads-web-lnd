@@ -1,0 +1,37 @@
+<div>
+	<div class="modal-header">
+		<h3 class="modal-title" id="sendpayment-modal-title">Send Payment <i class="fa fa-spinner fa-spin" ng-show="$ctrl.spinner > 0"></i></h3>
+	</div>
+	<div class="modal-body" id="sendpayment-modal-body">
+		<div class="alert alert-warning" role="alert" ng-show="$ctrl.warning">
+			<button type="button" class="close" ng-click="$ctrl.dismissAlert()" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+			{{ $ctrl.warning }}
+		</div>
+		<form>
+			<div class="form-group">
+				<label for="sendpayment-payreq">Payment request</label>
+				<input type="text" class="form-control" id="sendpayment-payreq" placeholder="payment request" ng-model="$ctrl.values.payreq" ng-change="$ctrl.decode()">
+			</div>
+			<div class="form-group">
+				<label for="sendpayment-amount">Amount (optional)</label>
+				<input type="numeric" class="form-control" id="sendpayment-amount" placeholder="amount (optional)" ng-model="$ctrl.values.amount">
+			</div>
+		</form>
+		<div ng-show="$ctrl.decodedPayment">
+			<dl class="dl-horizontal" style="overflow-wrap: break-word;">
+			  <dt ng-show="$ctrl.decodedPayment.description">Description</dt>
+			  <dd ng-show="$ctrl.decodedPayment.description">{{ $ctrl.decodedPayment.description }}</dd>
+			  <dt>Destination</dt>
+			  <dd>{{ $ctrl.decodedPayment.destination }}</dd>
+			  <dt>Payment hash</dt>
+			  <dd>{{ $ctrl.decodedPayment.payment_hash }}</dd>
+			  <dt>Amount in satoshis</dt>
+			  <dd>{{ $ctrl.decodedPayment.num_satoshis }}</dd>
+			</dl>
+		</div>
+	</div>
+	<div class="modal-footer">
+		<button class="btn btn-primary" type="button" ng-click="$ctrl.ok()">Send Payment</button>
+		<button class="btn btn-warning" type="button" ng-click="$ctrl.cancel()">Cancel</button>
+	</div>
+<div>
